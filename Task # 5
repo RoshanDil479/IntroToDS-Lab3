@@ -1,0 +1,71 @@
+import numpy as np
+import pandas as pd
+
+try:
+    movies = pd.read_csv("IMDB.csv", sep=";", encoding="ISO-8859-1")
+
+    print("=== Raw Dataset Preview ===")
+    print(movies)
+    print("\nData Types (before cleaning):")
+    print(movies.dtypes)
+
+    movies = movies.rename(columns={
+        "IMBD title ID": "IMDB ID",
+        "Original titlÊ": "Original Title",
+        "Release year": "Release Date",
+        "Genrë¨": "Genre",
+        " Votes ": "Votes",
+        "Income": "Income ($)"
+    })
+
+    movies = movies.drop(columns=["Unnamed: 8"])
+
+    movies["Release Date"] = pd.to_datetime(movies["Release Date"], errors="coerce")
+    movies["Score"] = pd.to_numeric(movies["Score"], errors="coerce")
+    movies["Votes"] = movies["Votes"].str.replace(".", "").astype("int64", errors="ignore")
+    movies["Income ($)"] = (movies["Income ($)"]
+                            .str.replace("$ ", "")
+                            .str.replace(",", "")
+                            .str.replace("o", "0")
+                            .astype("Int64"))
+    movies["Duration"] = pd.to_numeric(movies["Duration"], errors="coerce")
+
+    print("\nMissing values (before fixing):")
+    print(movies.isnull().sum())
+    print("\nCountry counts (raw):")
+    print(movies["Country"].value_counts())
+
+    movies["Country"] = movies["Country"].replace({
+        "USA": "United States of America",
+        "US": "United States of America",
+        "US.": "United States of America",
+        "Italy1": "Italy",
+        "New Zeland": "New Zealand",
+        "New Zesland": "New Zealand",
+        "UK": "United Kingdom",
+        "West Germany": "Germany"
+    })
+
+    movies = movies.dropna(subset=["IMDB ID", "Original Title"]).reset_index(drop=True)
+
+    movies["Score"] = movies["Score"].interpolate(method="linear").round(1)
+    movies["Content Rating"] = movies["Content Rating"].fillna(movies["Content Rating"].mode()[0])
+    movies["Release Date"] = movies["Release Date"].fillna(movies["Release Date"].mode()[0])
+    movies["Duration"] = movies["Duration"].replace([np.inf, -np.inf], np.nan)
+    movies["Duration"] = movies["Duration"].fillna(movies["Duration"].mean().round()).astype("int64")
+
+    print("===========================")
+    print("Data After Cleaning\n")
+    print("===========================")
+    print("\nData Types (after cleaning):")
+    print(movies.dtypes)
+    print("\nMissing values (after fixing):")
+    print(movies.isnull().sum())
+    print("\nCountry counts (cleaned):")
+    print(movies["Country"].value_counts())
+    print("\nNumber of duplicate rows:", movies.duplicated().sum())
+    print("\nFinal Cleaned Dataset:")
+    print(movies)
+
+except FileNotFoundError:
+    print("File not found! Please make sure 'IMDB.csv' is in your working directory.")
