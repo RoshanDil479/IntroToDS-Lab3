@@ -1,0 +1,44 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def detect_outliers(arr):
+    arr = np.array(arr)
+    
+    if arr.ndim == 1:
+        mean = arr.mean()
+        std = arr.std()
+        diff = arr - mean
+        outliers = np.abs(diff) > std
+        return diff, outliers
+    
+    elif arr.ndim == 2:
+        mean = arr.mean(axis=0)
+        std = arr.std(axis=0)
+        diff = arr - mean
+        outliers = np.abs(diff) > std
+        return diff, outliers
+
+arr1 = np.array([1, 2, 3, 10, 12, 2, 3, 4])
+diff1, outliers1 = detect_outliers(arr1)
+print("Differences:", diff1)
+print("Outliers mask:", outliers1)
+----------------------------
+plt.figure(figsize=(6,4))
+plt.plot(arr1, 'bo-', label="Values")
+plt.plot(np.where(outliers1)[0], arr1[outliers1], 'ro', label="Outliers")
+plt.axhline(arr1.mean(), color='g', linestyle='--', label="Mean")
+plt.legend()
+plt.title("1D Array with Outliers Highlighted")
+plt.show()
+---------------------
+arr2 = np.array([
+    [1, 200, 3],
+    [2, 210, 5],
+    [3, 220, 1000], 
+    [4, 215, 7]
+])
+
+diff2, outliers2 = detect_outliers(arr2)
+print("\n2D Differences:\n",diff2)
+print("2D Outliers mask:\n", outliers2)
+
