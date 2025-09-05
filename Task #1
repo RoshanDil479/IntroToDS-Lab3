@@ -1,0 +1,19 @@
+import numpy as np
+
+mat = np.random.randint(0, 101, (10, 10))
+print("Original Matrix:\n", mat)
+
+row_sums = mat.sum(axis=1)
+max_row_index = np.argmax(row_sums)
+print("\nRow with highest sum:", max_row_index, "Sum:", row_sums[max_row_index])
+
+min_val, max_val = mat.min(), mat.max()
+norm_mat = (mat - min_val) / (max_val - min_val)
+print("\nNormalized Matrix:\n", norm_mat)
+
+row_means = norm_mat.mean(axis=1)
+np.fill_diagonal(norm_mat, row_means)
+print("\nMatrix after replacing diagonal with row means:\n", norm_mat)
+
+det = np.linalg.det(norm_mat)
+print("\nDeterminant of transformed matrix:", det)
