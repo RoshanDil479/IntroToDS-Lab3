@@ -1,0 +1,46 @@
+import numpy as np
+import pandas as pd
+
+try:
+    students = pd.read_csv("StudentsPerformance.csv")
+  
+    print("Top 5 Science Scores:")
+    print(students.nlargest(5, "science score")["science score"])
+    print()
+
+    num_males = students["gender"].value_counts()["male"]
+    num_females = students["gender"].value_counts()["female"]
+    
+    avg_male_science = students[students["gender"] == "male"]["science score"].mean()
+    avg_male_read = students[students["gender"] == "male"]["reading score"].mean()
+    avg_male_write = students[students["gender"] == "male"]["writing score"].mean()
+    
+    print(f"Boys' Average ({num_males} students):")
+    print(f"  Science: {avg_male_science:.2f}")
+    print(f"  Reading: {avg_male_read:.2f}")
+    print(f"  Writing: {avg_male_write:.2f}")
+    print()
+    
+    avg_female_science = students[students["gender"] == "female"]["science score"].mean()
+    avg_female_read = students[students["gender"] == "female"]["reading score"].mean()
+    avg_female_write = students[students["gender"] == "female"]["writing score"].mean()
+    
+    print(f"Girls' Average ({num_females} students):")
+    print(f"  Science: {avg_female_science:.2f}")
+    print(f"  Reading: {avg_female_read:.2f}")
+    print(f"  Writing: {avg_female_write:.2f}")
+    print()
+#-----------Visualize using matplot.lib-------------
+    overview = students.pivot_table(index="gender",
+    values=["science score", "reading score", "writing score"],
+    aggfunc="mean")
+    print("Average scores by gender:")
+    print(overview)
+    print()
+
+    students["overall"] = students["science score"] + students["reading score"] + students["writing score"]
+    print("Top 5 Overall Scores:")
+    print(students.nlargest(5, "overall")["overall"])
+
+except FileNotFoundError:
+    print("Couldn’t find the file! Please put 'StudentsPerformance.csv' in the same folder.")
