@@ -1,0 +1,31 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+n = 100000
+dice1 = np.random.randint(1,7,n)
+dice2 = np.random.randint(1,7,n)
+sums2 = dice1 + dice2
+#empirical prob dist-------------
+vals, counts=np.unique(sums2, return_counts=True)
+emp_prob2 = counts/n
+#theoretical prob dist--------------
+theo_prob2={2:1,3:2,4:3,5:4,6:5,7:6,8:5,9:4,10:3,11:2,12:1}
+theo_prob2=np.array([theo_prob2[i]/36 for i in range(2,13)])
+
+plt.bar(vals, emp_prob2, alpha=0.6, label='empirical')
+plt.plot(range(2,13), theo_prob2, 'ro-', label='theoretical')
+plt.legend()
+plt.show()
+--------------------------
+#cumulativ prob nikale ge
+cum_prob2 = np.cumsum(emp_prob2)
+plt.step(vals, cum_prob2, where='mid')
+plt.show()
+-----------------------------------
+#visualize krenge
+dice3 = np.random.randint(1,7,n)
+sums3 = dice1 + dice2 + dice3
+vals3, counts3 = np.unique(sums3, return_counts=True)
+emp_prob3 = counts3 / n
+plt.bar(vals3, emp_prob3)
+plt.show()
