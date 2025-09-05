@@ -22,7 +22,7 @@ arr1 = np.array([1, 2, 3, 10, 12, 2, 3, 4])
 diff1, outliers1 = detect_outliers(arr1)
 print("Differences:", diff1)
 print("Outliers mask:", outliers1)
-----------------------------
+#----------------------------
 plt.figure(figsize=(6,4))
 plt.plot(arr1, 'bo-', label="Values")
 plt.plot(np.where(outliers1)[0], arr1[outliers1], 'ro', label="Outliers")
@@ -30,7 +30,7 @@ plt.axhline(arr1.mean(), color='g', linestyle='--', label="Mean")
 plt.legend()
 plt.title("1D Array with Outliers Highlighted")
 plt.show()
----------------------
+#---------------------
 arr2 = np.array([
     [1, 200, 3],
     [2, 210, 5],
