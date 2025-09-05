@@ -16,12 +16,12 @@ plt.bar(vals, emp_prob2, alpha=0.6, label='empirical')
 plt.plot(range(2,13), theo_prob2, 'ro-', label='theoretical')
 plt.legend()
 plt.show()
---------------------------
+#--------------------------
 #cumulativ prob nikale ge
 cum_prob2 = np.cumsum(emp_prob2)
 plt.step(vals, cum_prob2, where='mid')
 plt.show()
------------------------------------
+#-----------------------------------
 #visualize krenge
 dice3 = np.random.randint(1,7,n)
 sums3 = dice1 + dice2 + dice3
